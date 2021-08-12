@@ -304,6 +304,8 @@ static uint64_t add_publisher( SolParameters *prm, SolAccountInfo *ka )
     return ERROR_INVALID_ARGUMENT;
   }
 
+  sol_log("After cmd cast");
+
   // Account (1) is the price account
   // Verify that this is signed, writable with correct ownership
   // and size
@@ -312,6 +314,8 @@ static uint64_t add_publisher( SolParameters *prm, SolAccountInfo *ka )
        !valid_signable_account( prm, &ka[1], sizeof( pc_price_t ) ) ) {
     return ERROR_INVALID_ARGUMENT;
   }
+
+  sol_log("After ka0/ka1 checks");
 
   // Verify that symbol account is initialized and corresponds to the
   // same symbol and price-type in the instruction parameters
@@ -322,6 +326,8 @@ static uint64_t add_publisher( SolParameters *prm, SolAccountInfo *ka )
     return ERROR_INVALID_ARGUMENT;
   }
 
+  sol_log("After symbol checks");
+
   // try to add publisher
   for(uint32_t i=0; i != sptr->num_; ++i ) {
     pc_price_comp_t *iptr = &sptr->comp_[i];
@@ -329,9 +335,11 @@ static uint64_t add_publisher( SolParameters *prm, SolAccountInfo *ka )
       return ERROR_INVALID_ARGUMENT;
     }
   }
+  sol_log("After price lookup");
   if ( sptr->num_ >= PC_COMP_SIZE ) {
     return ERROR_INVALID_ARGUMENT;
   }
+  sol_log("After price component size check");
   pc_price_comp_t *iptr = &sptr->comp_[sptr->num_++];
   sol_memset( iptr, 0, sizeof( pc_price_comp_t ) );
   pc_pub_key_assign( &iptr->pub_, &cptr->pub_ );
